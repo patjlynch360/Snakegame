@@ -26,6 +26,8 @@ int main(){
         xMax = COLS-1;
         yMax = LINES-1;
 
+        // Hide the cursor
+        curs_set(0);
         //Creates the window
         WINDOW *win = newwin(yMax, xMax, 1,1);
         // grabs key inputs
