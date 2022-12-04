@@ -28,7 +28,7 @@ int main(){
     srand(time(0));
     int randX, randY;
     int trophy = 'T';
-    int trophyMax = 10;
+    int trophyMaxTime = 10;
     int trophyTimer;
 
     initscr();
@@ -67,7 +67,7 @@ int main(){
         randX = (rand()%COLS-2) +2;
         randY = (rand()%LINES-2) +2;
         mvwaddch(win, randY, randX, trophy);
-        trophyTimer =(rand()%trophyMax) + 1;
+        trophyTimer =(rand()%trophyMaxTime) + 1;
         wrefresh(win);
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
         while(1){
@@ -104,18 +104,20 @@ int main(){
                 randX = (rand()%COLS-2) +2;
                 randY = (rand()%LINES-2) +2;
                 mvwaddch(win, randY, randX, trophy);
-                trophyTimer =(rand()%trophyMax) + 1;
+                trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
             // If the snake reaches the trophy update the score and move the location
             else if((snakearr[4].xloc == randX) && (snakearr[4].yloc == randY)) {
                 score++;
+                //Problem with increasing length
+                //length++;
                 mvwprintw(win, 0, xMax - 30, "Score: %d", score);
                 mvwaddch(win, randY, randX, ' ');
                 randX = (rand()%COLS-2) +2;
                 randY = (rand()%LINES-2) +2;
                 mvwaddch(win, randY, randX, trophy);
-                trophyTimer =(rand()%trophyMax) + 1;
+                trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
             wrefresh(win);
