@@ -27,7 +27,7 @@ int main(){
     // Used for generating trophy location
     srand(time(0));
     int randX, randY;
-    int trophyMaxTime = 1000;
+    int trophyMaxTime = 1;
     int trophyTimer;
 
     initscr();
@@ -122,6 +122,11 @@ int main(){
                 trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
+            // Used for understanding what is happening with the trophy
+            mvwprintw(win, 10, xMax - 30, "Random X: %d", randX);
+            mvwprintw(win, 11, xMax - 30, "Max X: %d", xMax);
+            mvwprintw(win, 15, xMax - 30, "Random y: %d", randY);
+            mvwprintw(win, 16, xMax - 30, "Max y: %d", yMax);
             wrefresh(win);
             usleep(200000);  
             // If the snake hits an edge end the game
