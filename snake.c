@@ -27,8 +27,7 @@ int main(){
     // Used for generating trophy location
     srand(time(0));
     int randX, randY;
-    int trophy = 'T';
-    int trophyMaxTime = 10;
+    int trophyMaxTime = 1000;
     int trophyTimer;
 
     initscr();
@@ -66,7 +65,8 @@ int main(){
         
         randX = randomNum(5, xMax);
         randY = randomNum(5, yMax);
-        mvwaddch(win,randY, randX, trophy);
+        int trophy = randomNum(1, 9);
+        mvwprintw(win,randY, randX, "%d", trophy);
         trophyTimer =(rand()%trophyMaxTime) + 1;
         wrefresh(win);
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
@@ -100,23 +100,25 @@ int main(){
             }
             // Checks if snake has no reached the trophy in given amount of time
             if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTimer) {
-                mvwaddch(win, randY, randX, ' ');
+                mvwprintw(win, randY, randX, " ");
                 randX = randomNum(5, xMax);
                 randY = randomNum(5, yMax);
-                mvwaddch(win,randY, randX, trophy);
+                trophy = randomNum(1, 9);
+                mvwprintw(win,randY, randX, "%d", trophy);
                 trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
             // If the snake reaches the trophy update the score and move the location
             else if((snakearr[4].xloc == randX) && (snakearr[4].yloc == randY)) {
-                score++;
+                score = score + trophy;
                 //Problem with increasing length puts it at (1,1)? or (0,0) coordinates
                 //length++;
                 mvwprintw(win, 0, xMax - 30, "Score: %d", score);
-                mvwaddch(win, randY, randX, ' ');
+                mvwprintw(win, randY, randX, " ");
                 randX = randomNum(5, xMax);
                 randY = randomNum(5, yMax);
-                mvwaddch(win,randY, randX, trophy);
+                trophy = randomNum(1, 9);
+                mvwprintw(win,randY, randX, "%d", trophy);
                 trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
@@ -180,5 +182,5 @@ void updateSnake(struct snake arr[], int length, int dir){
 }
 
 int randomNum(int min, int max){
-   return min + rand() / (RAND_MAX / (max - min + 1) + 1);
+   return min + (rand() % max);
 }
