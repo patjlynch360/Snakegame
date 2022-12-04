@@ -28,7 +28,7 @@ int main(){
     int score = 0;
 
     // Used for generating trophy location
-    srand(time(NULL));
+    srand(time(0));
     int randX, randY;
     int trophy = 'T';
 
@@ -72,27 +72,6 @@ int main(){
         wrefresh(win);
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
         while(1){
-            // Checks if snake has no reached the trophy in given amount of time
-            if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTime) {
-                mvwaddch(win, randY, randX, ' ');
-                randX = (rand()%COLS-2) +2;
-                randY = (rand()%LINES-2) +2;
-                mvwaddch(win, randY, randX, trophy);
-                trophyTime =(rand()%trophyMax) + 1;
-                time(&begin);
-            }
-            // If the snake reaches the trophy update the score and move the location
-            else if((snakearr[4].xloc == randX) && (snakearr[4].yloc == randY)) {
-                score++;
-                mvwprintw(win, 0, xMax - 30, "Score: %d", score);
-                mvwaddch(win, randY, randX, ' ');
-                randX = (rand()%COLS-2) +2;
-                randY = (rand()%LINES-2) +2;
-                mvwaddch(win, randY, randX, trophy);
-                trophyTime =(rand()%trophyMax) + 1;
-                time(&begin);
-            }
-
             ch = wgetch(win);
             if(ch == KEY_UP && dir != DOWN) dir = UP;
             else if(ch == KEY_DOWN && dir != UP) dir = DOWN;
@@ -119,6 +98,26 @@ int main(){
             //prints the snake
             for(int i=0; i <length; i++){
                 mvwaddch(win,snakearr[i].yloc,snakearr[i].xloc,'o');
+            }
+            // Checks if snake has no reached the trophy in given amount of time
+            if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTime) {
+                mvwaddch(win, randY, randX, ' ');
+                randX = (rand()%COLS-2) +2;
+                randY = (rand()%LINES-2) +2;
+                mvwaddch(win, randY, randX, trophy);
+                trophyTime =(rand()%trophyMax) + 1;
+                time(&begin);
+            }
+            // If the snake reaches the trophy update the score and move the location
+            else if((snakearr[4].xloc == randX) && (snakearr[4].yloc == randY)) {
+                score++;
+                mvwprintw(win, 0, xMax - 30, "Score: %d", score);
+                mvwaddch(win, randY, randX, ' ');
+                randX = (rand()%COLS-2) +2;
+                randY = (rand()%LINES-2) +2;
+                mvwaddch(win, randY, randX, trophy);
+                trophyTime =(rand()%trophyMax) + 1;
+                time(&begin);
             }
             wrefresh(win);
             usleep(250000);  
