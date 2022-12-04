@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ncurses.h>
 #include <unistd.h>
+#include <time.h>
 
 #define UP    1
 #define DOWN  2
@@ -13,13 +15,23 @@ struct snake{
     int head;
 };
 
+
 void updateSnake(struct snake[], int, int);
 
 int main(){
+
+    int trophyMax = 100;
+    int trophyTime;
     int dir = RIGHT;
     int x, y, xMax, yMax, ch;
     int length = 5;
     int score = 0;
+
+    // Used for generating trophy location
+    srand(time(NULL));
+    int randX, randY;
+    int trophy = 'T';
+
     initscr();
         clear();
         x = y = 1;
@@ -49,10 +61,38 @@ int main(){
         for(int i=0; i <length; i++){
             mvwaddch(win,snakearr[i].yloc,snakearr[i].xloc,'o');
         }
-
+        // creates the trophy and timer
+        time_t begin, end;
+        time(&begin);
+        
+        randX = (rand()%COLS-2) +2;
+        randY = (rand()%LINES-2) +2;
+        mvwaddch(win, randY, randX, trophy);
+        trophyTime =(rand()%trophyMax) + 1;
         wrefresh(win);
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
         while(1){
+            // Checks if snake has no reached the trophy in given amount of time
+            if (((snakearr[4].xloc != randX) && (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTime) {
+                mvwaddch(win, randY, randX, ' ');
+                randX = (rand()%COLS-2) +2;
+                randY = (rand()%LINES-2) +2;
+                mvwaddch(win, randY, randX, trophy);
+                trophyTime =(rand()%trophyMax) + 1;
+                time(&begin);
+            }
+            // If the snake reaches the trophy update the score and move the location
+            else if((snakearr[4].xloc == randX) && (snakearr[4].yloc == randY)) {
+                score++;
+                mvwprintw(win, 0, xMax - 30, "Score: %d", score);
+                mvwaddch(win, randY, randX, ' ');
+                randX = (rand()%COLS-2) +2;
+                randY = (rand()%LINES-2) +2;
+                mvwaddch(win, randY, randX, trophy);
+                trophyTime =(rand()%trophyMax) + 1;
+                time(&begin);
+            }
+
             ch = wgetch(win);
             if(ch == KEY_UP && dir != DOWN) dir = UP;
             else if(ch == KEY_DOWN && dir != UP) dir = DOWN;
