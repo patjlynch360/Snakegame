@@ -15,7 +15,7 @@ struct snake{
     int head;
 };
 
-
+int randomNum(int, int);
 void updateSnake(struct snake[], int, int);
 
 int main(){
@@ -64,9 +64,9 @@ int main(){
         time_t begin, end;
         time(&begin);
         
-        randX = (rand()%COLS-2) +2;
-        randY = (rand()%LINES-2) +2;
-        mvwaddch(win, randY, randX, trophy);
+        randX = randomNum(5, xMax);
+        randY = randomNum(5, yMax);
+        mvwaddch(win,randY, randX, trophy);
         trophyTimer =(rand()%trophyMaxTime) + 1;
         wrefresh(win);
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
@@ -101,28 +101,27 @@ int main(){
             // Checks if snake has no reached the trophy in given amount of time
             if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTimer) {
                 mvwaddch(win, randY, randX, ' ');
-                randX = (rand()%COLS-2) +2;
-                randY = (rand()%LINES-2) +2;
-                mvwaddch(win, randY, randX, trophy);
+                randX = randomNum(5, xMax);
+                randY = randomNum(5, yMax);
+                mvwaddch(win,randY, randX, trophy);
                 trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
             // If the snake reaches the trophy update the score and move the location
             else if((snakearr[4].xloc == randX) && (snakearr[4].yloc == randY)) {
                 score++;
-                //Problem with increasing length
+                //Problem with increasing length puts it at (1,1)? or (0,0) coordinates
                 //length++;
                 mvwprintw(win, 0, xMax - 30, "Score: %d", score);
                 mvwaddch(win, randY, randX, ' ');
-                randX = (rand()%COLS-2) +2;
-                randY = (rand()%LINES-2) +2;
-                mvwaddch(win, randY, randX, trophy);
+                randX = randomNum(5, xMax);
+                randY = randomNum(5, yMax);
+                mvwaddch(win,randY, randX, trophy);
                 trophyTimer =(rand()%trophyMaxTime) + 1;
                 time(&begin);
             }
             wrefresh(win);
-            usleep(250000);  
-
+            usleep(200000);  
             // If the snake hits an edge end the game
             if(snakearr[4].xloc == xMax || snakearr[4].yloc == yMax || snakearr[4].xloc == 0 || snakearr[4].yloc == 0) {
                 break;
@@ -178,4 +177,8 @@ void updateSnake(struct snake arr[], int length, int dir){
             }
         }
     }
+}
+
+int randomNum(int min, int max){
+   return min + rand() / (RAND_MAX / (max - min + 1) + 1);
 }
