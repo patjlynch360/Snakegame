@@ -75,6 +75,7 @@ int main(){
             if(ch == KEY_UP) {
                 if (dir == DOWN) {
                     mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    wrefresh(win);
                     usleep(3000000);
                     break;
                 }
@@ -83,6 +84,7 @@ int main(){
             else if(ch == KEY_DOWN) {
                 if (dir == UP) {
                     mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    wrefresh(win);
                     usleep(3000000);
                     break;
                 }
@@ -91,6 +93,7 @@ int main(){
             else if(ch == KEY_LEFT) {
                 if (dir == RIGHT) {
                     mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    wrefresh(win);
                     usleep(1000000);
                     break;
                 }
@@ -99,6 +102,7 @@ int main(){
             else if(ch == KEY_RIGHT) {
                 if (dir == LEFT) {
                     mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    wrefresh(win);
                     usleep(3000000);
                     break;
                 }
