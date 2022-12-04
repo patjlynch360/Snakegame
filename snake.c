@@ -20,7 +20,7 @@ void updateSnake(struct snake[], int, int);
 
 int main(){
 
-    int trophyMax = 100;
+    int trophyMax = 10;
     int trophyTime;
     int dir = RIGHT;
     int x, y, xMax, yMax, ch;
