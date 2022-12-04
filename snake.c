@@ -163,6 +163,9 @@ int main(){
             usleep(200000);  
             // If the snake hits an edge end the game
             if(snakearr[4].xloc == xMax || snakearr[4].yloc == yMax || snakearr[4].xloc == 0 || snakearr[4].yloc == 0) {
+                mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                wrefresh(win);
+                usleep(3000000);
                 break;
             }
         }      
