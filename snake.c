@@ -72,10 +72,38 @@ int main(){
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
         while(1){
             ch = wgetch(win);
-            if(ch == KEY_UP && dir != DOWN) dir = UP;
-            else if(ch == KEY_DOWN && dir != UP) dir = DOWN;
-            else if(ch == KEY_LEFT && dir != RIGHT) dir = LEFT;
-            else if(ch == KEY_RIGHT && dir != LEFT) dir = RIGHT;
+            if(ch == KEY_UP) {
+                if (dir == DOWN) {
+                    mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    usleep(3000000);
+                    break;
+                }
+                else dir = UP;
+            }
+            else if(ch == KEY_DOWN) {
+                if (dir == UP) {
+                    mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    usleep(3000000);
+                    break;
+                }
+                else dir = DOWN;
+            }
+            else if(ch == KEY_LEFT) {
+                if (dir == RIGHT) {
+                    mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    usleep(1000000);
+                    break;
+                }
+                else dir = LEFT;
+            }
+            else if(ch == KEY_RIGHT) {
+                if (dir == LEFT) {
+                    mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
+                    usleep(3000000);
+                    break;
+                }
+                else dir = RIGHT;
+            }
             // Close game if x is pressed
             else if(ch == 'x' || ch == 'X') break;
 
