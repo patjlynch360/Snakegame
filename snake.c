@@ -73,7 +73,7 @@ int main(){
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
         while(1){
             // Checks if snake has no reached the trophy in given amount of time
-            if (((snakearr[4].xloc != randX) && (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTime) {
+            if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTime) {
                 mvwaddch(win, randY, randX, ' ');
                 randX = (rand()%COLS-2) +2;
                 randY = (rand()%LINES-2) +2;
