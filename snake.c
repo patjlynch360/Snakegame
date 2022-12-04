@@ -19,9 +19,6 @@ struct snake{
 void updateSnake(struct snake[], int, int);
 
 int main(){
-
-    int trophyMax = 10;
-    int trophyTime;
     int dir = RIGHT;
     int x, y, xMax, yMax, ch;
     int length = 5;
@@ -31,6 +28,8 @@ int main(){
     srand(time(0));
     int randX, randY;
     int trophy = 'T';
+    int trophyMax = 10;
+    int trophyTimer;
 
     initscr();
         clear();
@@ -68,7 +67,7 @@ int main(){
         randX = (rand()%COLS-2) +2;
         randY = (rand()%LINES-2) +2;
         mvwaddch(win, randY, randX, trophy);
-        trophyTime =(rand()%trophyMax) + 1;
+        trophyTimer =(rand()%trophyMax) + 1;
         wrefresh(win);
         //moves the snake by coping the snakes position from the snake struct in front of it unless it is the head of snake then that will move depending on the key that is pressed
         while(1){
@@ -100,12 +99,12 @@ int main(){
                 mvwaddch(win,snakearr[i].yloc,snakearr[i].xloc,'o');
             }
             // Checks if snake has no reached the trophy in given amount of time
-            if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTime) {
+            if (((snakearr[4].xloc != randX) || (snakearr[4].yloc != randY)) && (time(&end) - begin) >= trophyTimer) {
                 mvwaddch(win, randY, randX, ' ');
                 randX = (rand()%COLS-2) +2;
                 randY = (rand()%LINES-2) +2;
                 mvwaddch(win, randY, randX, trophy);
-                trophyTime =(rand()%trophyMax) + 1;
+                trophyTimer =(rand()%trophyMax) + 1;
                 time(&begin);
             }
             // If the snake reaches the trophy update the score and move the location
@@ -116,7 +115,7 @@ int main(){
                 randX = (rand()%COLS-2) +2;
                 randY = (rand()%LINES-2) +2;
                 mvwaddch(win, randY, randX, trophy);
-                trophyTime =(rand()%trophyMax) + 1;
+                trophyTimer =(rand()%trophyMax) + 1;
                 time(&begin);
             }
             wrefresh(win);
