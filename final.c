@@ -19,11 +19,13 @@ int randomNum(int, int);
 void updateSnake(struct snake[], int, int);
 void printSnake(WINDOW *win, struct snake[], int);
 void addSnake(struct snake[], int, int);
+void initSnake(struct snake[], int, int, int, int, int, int);
 
 int main(){
     int x, y, xMax, yMax, ch;
-    int length = 3;
+    int length = 15;
     int score = 0;
+    int gameover = 0;
 
     // Used for generating trophy location
     srand(time(0));
@@ -38,6 +40,8 @@ int main(){
         xMax = COLS-1;
         yMax = LINES-1;
         time_t t;
+        int nextX, nextY;
+        
 
         // Hide the cursor
         curs_set(0);
@@ -53,19 +57,14 @@ int main(){
         mvwprintw(win, 0, xMax - 30, "Score: %d", score);
         //creates the snake
         struct snake snakearr[(xMax*yMax)/2];
-        for(int i=0;i<length;i++){
-            snakearr[i].xloc=(i+1) + 50;
-            snakearr[i].yloc=yMax/2;
-            if (i == length-1)
-                snakearr[i].head = 1;
-        }
+        initSnake(snakearr, length, dir, yMax, xMax, nextY, nextX);
         printSnake(win, snakearr, length);
         // creates the trophy and timer
         time_t begin, end;
         time(&begin);
         randX = (rand()% (((COLS-1)-15)-10) +1)+10;
         randY = (rand()% (((LINES-1)-10)-5) +1)+5;
-        int trophy = 1;//randomNum(1, 9);
+        int trophy = randomNum(1, 9);
         //trophyTimer = (rand() % 9)+1;
         mvwprintw(win,randY, randX, "%d", trophy);
         wrefresh(win);
@@ -127,8 +126,14 @@ int main(){
             if (dir==RIGHT){
                 updateSnake(snakearr, length, dir);
             }
+            char* nextpos = (char*) calloc(2, sizeof(char));
             //prints the snake
-            
+            if (nextpos[0] == 'o'){
+                gameover = TRUE;
+                free(nextpos);
+                break;
+            }
+            free(nextpos);
             // Checks if snake has no reached the trophy in given amount of time
             if (((snakearr[length-1].xloc != randX) || (snakearr[length-1].yloc != randY)) && (time(&end) - begin) >= trophy) {
                 mvwprintw(win, randY, randX, " ");
@@ -140,7 +145,7 @@ int main(){
                 while(randY >= yMax){
                     randY = rand()% (LINES-1);
                 }
-                trophy = 1;//randomNum(1, 9);
+                trophy = randomNum(1, 9);
                 //trophyTimer = (rand() % 9)+1;
                 mvwprintw(win,randY, randX, "%d", trophy);
                 time(&begin);
@@ -156,17 +161,21 @@ int main(){
                 mvwprintw(win, randY, randX, " ");
                 randX = (rand()% (((COLS-1)-15)-10) +1)+10;
                 randY = (rand()% (((LINES-1)-5)-2) +1)+2;
-                trophy = 1; //randomNum(1, 9);
+                trophy = randomNum(1, 9);
                 //trophyTimer = (rand() % 9)+1;
                 mvwprintw(win,randY, randX, "%d", trophy);
                 time(&begin);
             }
-            // mvwprintw(win, 10, xMax - 30, "Random X: %d", randX);
-            // mvwprintw(win, 11, xMax - 30, "Max X: %d", xMax);
-            // mvwprintw(win, 15, xMax - 30, "Random y: %d", randY);
-            // mvwprintw(win, 16, xMax - 30, "Max y: %d", yMax);
             // If the snake hits an edge end the game
             if(snakearr[length-1].xloc == xMax || snakearr[length-1].yloc == yMax || snakearr[length-1].xloc == 0 || snakearr[length-1].yloc == 0) {
+                gameover = 1;
+            }
+            for(int i = 0; i < length-1; i++){
+                if(snakearr[length-1].xloc == snakearr[i].xloc && snakearr[length-1].yloc == snakearr[i].yloc){
+                gameover = 1;
+                }
+            }
+            if (gameover){
                 mvwprintw(win, yMax/2, xMax/2, "For better or worse, you died!");
                 wrefresh(win);
                 usleep(3000000);
@@ -174,7 +183,7 @@ int main(){
             }
             printSnake(win, snakearr, length);
             wrefresh(win);
-            usleep(400000/length);  
+            usleep(100000);  
         }      
     wrefresh(win);
     endwin();
@@ -234,8 +243,8 @@ int randomNum(int min, int max){
 
 void printSnake(WINDOW *win, struct snake arr[], int length){
     for(int i=0; i <length; i++){
-                mvwaddch(win,arr[i].yloc,arr[i].xloc,'o');
-            }
+        mvwaddch(win,arr[i].yloc,arr[i].xloc,'o');
+    }
 }
 
 void addSnake(struct snake snakearr[], int length, int dir){
@@ -262,5 +271,48 @@ void addSnake(struct snake snakearr[], int length, int dir){
                 snakearr[i].yloc = snakearr[i-1].yloc;
             }
         }
+    }
+}
+
+void initSnake(struct snake snakearr[], int length, int dir, int yMax, int xMax, int nextY, int nextX){
+    if(dir == UP){
+        for(int i=0;i<length;i++){
+                snakearr[i].xloc=(xMax/2);
+                snakearr[i].yloc=(yMax/2)-i;
+                if (i == length-1)
+                    snakearr[i].head = 1;
+                    nextX = snakearr[i].xloc;
+                    nextY = snakearr[i].yloc;
+            }
+    }
+    if(dir == DOWN){
+        for(int i=0;i<length;i++){
+                snakearr[i].xloc=(xMax/2);
+                snakearr[i].yloc=(yMax/2)+i;
+                if (i == length-1)
+                    snakearr[i].head = 1;
+                    nextX = snakearr[i].xloc;
+                    nextY = snakearr[i].yloc;
+            }
+    }
+    if(dir == LEFT){
+        for(int i=0;i<length;i++){
+                snakearr[i].xloc=(xMax/2)-i;
+                snakearr[i].yloc=(yMax/2);
+                if (i == length-1)
+                    snakearr[i].head = 1;
+                    nextX = snakearr[i].xloc;
+                    nextY = snakearr[i].yloc;
+            }
+    }
+    if(dir == RIGHT){
+        for(int i=0;i<length;i++){
+                snakearr[i].xloc=(xMax/2)+i;
+                snakearr[i].yloc=(yMax/2);
+                if (i == length-1)
+                    snakearr[i].head = 1;
+                    nextX = snakearr[i].xloc;
+                    nextY = snakearr[i].yloc;
+            }
     }
 }
